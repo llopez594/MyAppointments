@@ -14,5 +14,10 @@ class MenuActivity : AppCompatActivity() {
             val intent = Intent(this, CreateAppointmentActivity::class.java)
             startActivity(intent)
         }
+
+        btnMyAppointments.setOnClickListener {
+            val intent = Intent(this, AppointmentsActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
