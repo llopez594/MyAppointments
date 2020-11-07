@@ -10,8 +10,21 @@
     <string name="btn_register">Confirmar registro</string>
     <string name="label_go_to_login">¿Ya tienes una cuenta?</string>
     <string name="please_fill_your_register_data">Por favor completa tus datos</string>
-    <string name="btn_create_appointment">Registrar cita</string>
+    <string name="btn_create_appointment">Reservar cita</string>
     <string name="btn_my_appointments">Mis citas</string>
     <string name="btn_logout">Cerrar sesion</string>
     <string name="label_welcome">Bienvenido</string>
+    <string name="label_create_appointment">Reservar cita</string>
+    <string name="label_description">Descripcion</string>
+    <string name="label_specialty">Especialidad</string>
+    <string name="label_type">Tipo de cita</string>
+    <string name="type1">Consulta</string>
+    <string name="type2">Examen</string>
+    <string name="type3">Operacion</string>
+    <string name="btn_next">Siguiente</string>
+    <string name="label_doctor">Medico</string>
+    <string name="label_scheduled_date">Fecha para la cita</string>
+    <string name="btn_confirm">Confirmar</string>
+
+    <string name="date_format">%1$d-%2$s-%3$s</string>
 </resources>

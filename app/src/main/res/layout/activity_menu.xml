@@ -20,18 +20,21 @@
 
 
     <Button
+        android:id="@+id/btnCreateAppointment"
         style="@style/MenuButton"
         android:layout_marginTop="12dp"
         android:drawableStart="@drawable/ic_add_circle"
         android:text="@string/btn_create_appointment" />
 
     <Button
+        android:id="@+id/btnMyAppointments"
         style="@style/MenuButton"
         android:layout_marginTop="12dp"
         android:drawableStart="@drawable/ic_schedule"
         android:text="@string/btn_my_appointments" />
 
     <Button
+        android:id="@+id/btnLogout"
         style="@style/MenuButton"
         android:layout_marginTop="12dp"
         android:drawableStart="@drawable/ic_power_off"
