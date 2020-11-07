@@ -8,21 +8,44 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_create_appointment.*
 import java.util.*
 
 class CreateAppointmentActivity : AppCompatActivity() {
 
     private val selectedCalendar = Calendar.getInstance()
-    private var selectedRadioButton: RadioButton? = null
+    private var selectedTimeRadioButton: RadioButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_appointment)
 
         btnNext.setOnClickListener {
-            cvStep1.visibility = View.GONE
-            cvStep2.visibility = View.VISIBLE
+            if(etDescription.text.length < 3) {
+                etDescription.error = getString(R.string.validate_appointment_description)
+            } else {
+                // continue to step 2
+                cvStep1.visibility = View.GONE
+                cvStep2.visibility = View.VISIBLE
+            }
+
+        }
+
+        btnNext2.setOnClickListener {
+            when {
+                etScheduledDate.text.toString().isEmpty() -> {
+                    etScheduledDate.error = getString(R.string.validate_appointment_date)
+                }
+                selectedTimeRadioButton == null -> {
+                    Snackbar.make(createAppointmentLinearLayout, R.string.validate_appointment_time, Snackbar.LENGTH_SHORT).show()
+                }
+                else -> {
+                    // continue to step 3
+                    cvStep2.visibility = View.GONE
+                    cvStep3.visibility = View.VISIBLE
+                }
+            }
         }
 
         btnConfirmAppointment.setOnClickListener {
@@ -50,9 +73,8 @@ class CreateAppointmentActivity : AppCompatActivity() {
                 y,
                 m.twoDigits(),
                 d.twoDigits()
-            )
-                .toEditable()
-
+            ).toEditable()
+            etScheduledDate.error = null
             displayRadioButtons()
         }
 
@@ -72,7 +94,7 @@ class CreateAppointmentActivity : AppCompatActivity() {
     }
 
     private fun displayRadioButtons() {
-        selectedRadioButton = null
+        selectedTimeRadioButton = null
         radioGroupLeft.removeAllViews()
         radioGroupRight.removeAllViews()
 
@@ -85,10 +107,10 @@ class CreateAppointmentActivity : AppCompatActivity() {
             radioButton.text = it
 
             radioButton.setOnClickListener { view ->
-                selectedRadioButton?.isChecked = false
+                selectedTimeRadioButton?.isChecked = false
 
-                selectedRadioButton = view as RadioButton?
-                selectedRadioButton?.isChecked = true
+                selectedTimeRadioButton = view as RadioButton?
+                selectedTimeRadioButton?.isChecked = true
             }
 
             if (goToLeft)

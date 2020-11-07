@@ -31,4 +31,7 @@
     <string name="item_appointment_date">Atencion el dia %1$s</string>
     <string name="item_appointment_time">A las %1$s</string>
     <string name="my_appointments">Mis citas Medicas</string>
+    <string name="validate_appointment_description">error</string>
+    <string name="validate_appointment_date">Es necesario seleccionar una fecha</string>
+    <string name="validate_appointment_time">Es necesario definir una hora para la cita</string>
 </resources>
