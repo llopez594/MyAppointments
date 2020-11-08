@@ -9,11 +9,16 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var preferences: SharedPreferences
+
+    private val snackbar by lazy {
+        Snackbar.make(mainLayout, R.string.press_back_again, Snackbar.LENGTH_SHORT)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,5 +56,12 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, MenuActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    override fun onBackPressed() {
+        if (snackbar.isShown)
+            super.onBackPressed()
+        else
+            snackbar.show()
     }
 }

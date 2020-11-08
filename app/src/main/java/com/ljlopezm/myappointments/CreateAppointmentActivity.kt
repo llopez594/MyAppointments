@@ -1,9 +1,13 @@
 package com.ljlopezm.myappointments
 
 import Extensions.toEditable
+import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
@@ -22,7 +26,7 @@ class CreateAppointmentActivity : AppCompatActivity() {
         setContentView(R.layout.activity_create_appointment)
 
         btnNext.setOnClickListener {
-            if(etDescription.text.length < 3) {
+            if(etDescription.text.toString().length < 3) {
                 etDescription.error = getString(R.string.validate_appointment_description)
             } else {
                 // continue to step 2
@@ -60,7 +64,7 @@ class CreateAppointmentActivity : AppCompatActivity() {
         spinnerDoctors.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, doctor_options)
     }
 
-    fun onClickScheduledDate(v: View?) {
+    fun onClickScheduledDate() {
         val year = selectedCalendar.get(Calendar.YEAR)
         val month = selectedCalendar.get(Calendar.MONTH)
         val dayOfMonth = selectedCalendar.get(Calendar.DAY_OF_MONTH)
@@ -122,4 +126,28 @@ class CreateAppointmentActivity : AppCompatActivity() {
     }
 
     private fun Int.twoDigits() = if(this>=10) this.toString() else "0$this"
+
+    override fun onBackPressed() {
+        if (cvStep2.visibility == View.VISIBLE)
+        {
+            cvStep1.visibility = View.VISIBLE
+            cvStep2.visibility = View.GONE
+        }
+        else if (cvStep1.visibility == View.VISIBLE)
+        {
+            val builder = AlertDialog.Builder(this)
+                .setTitle(getString(R.string.dialog_create_appointment_exit_title))
+                .setMessage(getString(R.string.dialog_create_appointment_exit_message))
+                .setPositiveButton(getString(R.string.dialog_create_appointment_exit_positive_btn)) { _, _ ->
+                    finish()
+                }
+                .setNegativeButton(getString(R.string.dialog_create_appointment_exit_negative_btn)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setCancelable(false)
+
+            val dialog = builder.create()
+            dialog.show()
+        }
+    }
 }
