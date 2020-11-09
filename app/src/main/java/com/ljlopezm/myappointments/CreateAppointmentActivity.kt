@@ -3,17 +3,17 @@ package com.ljlopezm.myappointments
 import Extensions.toEditable
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_create_appointment.*
+import kotlinx.android.synthetic.main.card_view_step_one.*
+import kotlinx.android.synthetic.main.card_view_step_three.*
+import kotlinx.android.synthetic.main.card_view_step_two.*
 import java.util.*
 
 class CreateAppointmentActivity : AppCompatActivity() {
@@ -64,7 +64,7 @@ class CreateAppointmentActivity : AppCompatActivity() {
         spinnerDoctors.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, doctor_options)
     }
 
-    fun onClickScheduledDate() {
+    fun onClickScheduledDate(view: View) {
         val year = selectedCalendar.get(Calendar.YEAR)
         val month = selectedCalendar.get(Calendar.MONTH)
         val dayOfMonth = selectedCalendar.get(Calendar.DAY_OF_MONTH)
