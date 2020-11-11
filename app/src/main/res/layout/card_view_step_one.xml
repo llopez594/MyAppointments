@@ -27,7 +27,8 @@
         <EditText
             android:id="@+id/etDescription"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_description_create_appointment"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -47,22 +48,27 @@
             android:text="@string/label_type" />
 
         <RadioGroup
+            android:id="@+id/radioGroupType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            android:checkedButton="@id/rbType1"
             android:orientation="vertical">
 
             <RadioButton
+                android:id="@+id/rbType1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/type1" />
 
             <RadioButton
+                android:id="@+id/rbType2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/type2" />
 
             <RadioButton
+                android:id="@+id/rbType3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/type3" />
