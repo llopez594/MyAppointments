@@ -10,6 +10,7 @@
     app:cardElevation="8dp"
     app:contentPadding="12dp"
     android:visibility="gone"
+    tools:visibility="visible"
     tools:context=".CreateAppointmentActivity">
 
     <androidx.core.widget.NestedScrollView
@@ -48,6 +49,26 @@
                 android:maxLines="1"
                 android:onClick="onClickScheduledDate" />
 
+
+            <TextView
+                android:id="@+id/tvSelectDoctorAndDate"
+                android:textColor="@color/colorAccent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:text="@string/label_select_doctor_and_date"/>
+
+            <TextView
+                android:id="@+id/tvNoAvailableHours"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:text="@string/no_available_hours"/>
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -64,12 +85,16 @@
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        tools:visibility="visible"
                         android:text="8:00 AM" />
 
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="8:00 AM" />
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:text="9:00 AM" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -83,12 +108,16 @@
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="8:00 AM" />
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:text="8:30 AM" />
 
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="8:00 AM" />
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:text="9:30 AM" />
                 </LinearLayout>
 
             </LinearLayout>

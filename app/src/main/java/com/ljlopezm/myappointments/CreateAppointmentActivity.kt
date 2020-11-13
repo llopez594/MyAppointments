@@ -1,14 +1,18 @@
 package com.ljlopezm.myappointments
 
 import Extensions.toEditable
+import Extensions.toast
 import IO.ApiService
 import Models.Doctor
+import Models.Schedule
 import Models.Specialty
 import Utils.LogUtil
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -65,25 +69,48 @@ class CreateAppointmentActivity : AppCompatActivity() {
         }
 
         btnConfirmAppointment.setOnClickListener {
-            Toast.makeText(this, "Cita registrada correctamente", Toast.LENGTH_SHORT).show()
+            toast("Cita registrada correctamente")
             finish()
         }
 
+        etDescription.text = "asd".toEditable()
         this.loadSpecialties()
         this.listenSpecialtyChanges()
+        this.listenDoctorAndDateChanges()
     }
 
     private fun listenSpecialtyChanges() {
         spinnerSpecialties.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapter: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val specialty: Specialty = adapter?.getItemAtPosition(position) as Specialty
-                loadDoctors(specialty.id)
+                val specialty = adapter?.getItemAtPosition(position) as Specialty
+                loadDoctors(SpecialtyId = specialty.id)
             }
 
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
+            override fun onNothingSelected(p0: AdapterView<*>?) {  }
         }
+    }
+
+    private fun listenDoctorAndDateChanges() {
+        // doctors
+        spinnerDoctors.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapter: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val doctor = adapter?.getItemAtPosition(position) as Doctor
+                loadHours(doctorId = doctor.id, date = etScheduledDate.text.toString())
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {  }
+        }
+
+        // schduled date
+        etScheduledDate.addTextChangedListener(object: TextWatcher {
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                val doctor = spinnerDoctors.selectedItem as Doctor
+                loadHours(doctorId = doctor.id, date = etScheduledDate.text.toString())
+            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {  }
+
+            override fun afterTextChanged(p0: Editable?) {  }
+        } )
     }
 
     @SuppressLint("CheckResult")
@@ -96,10 +123,9 @@ class CreateAppointmentActivity : AppCompatActivity() {
                 spinnerSpecialties.adapter = ArrayAdapter<Specialty>(this, android.R.layout.simple_list_item_1, it)
             }, {
                 LogUtil.errorLog("Valores", "Error en el subscribe!!. $it")
-                Toast.makeText(this@CreateAppointmentActivity, getString(R.string.error_loading_specialties), Toast.LENGTH_SHORT).show()
+                toast(getString(R.string.error_loading_specialties))
                 finish()
             })
-
     }
 
     @SuppressLint("CheckResult")
@@ -112,8 +138,30 @@ class CreateAppointmentActivity : AppCompatActivity() {
                 spinnerDoctors.adapter = ArrayAdapter<Doctor>(this, android.R.layout.simple_list_item_1, it)
             }, {
                 LogUtil.errorLog("Valores", "Error en el subscribe!!. $it")
-                Toast.makeText(this@CreateAppointmentActivity, getString(R.string.error_loading_doctors), Toast.LENGTH_SHORT).show()
+                toast(getString(R.string.error_loading_doctors))
                 finish()
+            })
+    }
+
+    @SuppressLint("CheckResult")
+    private fun loadHours(doctorId: Int, date: String) {
+        if (date.isEmpty()) {
+            return
+        }
+
+        apiService.getHours(doctorId = doctorId, date = date)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                LogUtil.debugLog("Valores", "post submitted to API. $it")
+                tvSelectDoctorAndDate.visibility = View.GONE
+
+                val intervals = it.morning + it.afternoon
+                val hours = intervals.map { item -> item.start } as ArrayList<String>
+                displayIntervalRadios(hours)
+            }, {
+                LogUtil.errorLog("Valores", "Error en el subscribe!!. $it")
+                Toast.makeText(this@CreateAppointmentActivity, getString(R.string.error_loading_hours), Toast.LENGTH_SHORT).show()
             })
     }
 
@@ -141,11 +189,10 @@ class CreateAppointmentActivity : AppCompatActivity() {
             etScheduledDate.text = resources.getString(
                 R.string.date_format,
                 y,
-                m.twoDigits(),
+                (m+1).twoDigits(),
                 d.twoDigits()
             ).toEditable()
             etScheduledDate.error = null
-            displayRadioButtons()
         }
 
         //new dialog
@@ -163,12 +210,17 @@ class CreateAppointmentActivity : AppCompatActivity() {
         datePickerDialog.show()
     }
 
-    private fun displayRadioButtons() {
+    private fun displayIntervalRadios(hours: ArrayList<String>) {
         selectedTimeRadioButton = null
         radioGroupLeft.removeAllViews()
         radioGroupRight.removeAllViews()
 
-        val hours = arrayOf("3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM", "5:00 PM")
+        if(hours.isEmpty()) {
+            tvNoAvailableHours.visibility = View.VISIBLE
+            return
+        }
+        tvNoAvailableHours.visibility = View.GONE
+
         var goToLeft = true
 
         hours.forEach {

@@ -26,9 +26,9 @@ val PARAM2 = "param2"
 val PARAM3 = "param3"
 val PARAM4 = "param4"
 
-fun View.displaySnack(message:String, length: Int = Snackbar.LENGTH_LONG, func: Snackbar.()-> Unit) {
+fun View.displaySnack(message:String, duration: Int = Snackbar.LENGTH_LONG, func: Snackbar.()-> Unit) {
 
-    val snackbar = Snackbar.make(this, message, length)
+    val snackbar = Snackbar.make(this, message, duration)
 
     snackbar.func()
 
@@ -37,8 +37,8 @@ fun View.displaySnack(message:String, length: Int = Snackbar.LENGTH_LONG, func: 
 
 fun Snackbar.action(message:String, listener: (View) -> Unit) = setAction(message, listener)
 
-fun Context.toast(message: CharSequence) =
-    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+fun Context.toast(message: CharSequence, duration: Int = Toast.LENGTH_SHORT)
+        = Toast.makeText(this, message, duration).show()
 
 val View.context: Context get() = context
 

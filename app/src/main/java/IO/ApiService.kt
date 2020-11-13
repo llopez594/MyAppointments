@@ -1,18 +1,17 @@
 package IO
 
+import IO.response.LoginResponse
 import Models.Doctor
+import Models.Schedule
 import Models.Specialty
-import Utils.LogUtil
 import Utils.Variables
 import io.reactivex.Observable
-import okhttp3.*
-import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Path
-import java.util.concurrent.TimeUnit
+import retrofit2.http.*
 import kotlin.collections.ArrayList
 
 interface ApiService {
@@ -30,10 +29,22 @@ interface ApiService {
         }
     }
 
-    @GET(value = "specialties")
+    @GET("specialties")
     fun getSpecialties(): Observable<ArrayList<Specialty>>
 
-    @GET(value = "specialties/{specialty}/doctors")
+    @GET( "specialties/{specialty}/doctors")
     fun getDoctors(@Path("specialty") specialty: Int): Observable<ArrayList<Doctor>>
+
+    @GET("schedule/hours")
+    fun getHours(@Query("doctor_id") doctorId: Int,
+                 @Query("date") date: String): Observable<Schedule>
+
+    @POST("login")
+    fun postLogin(@Query("email") email: String,
+                 @Query("password") password: String): Observable<LoginResponse>
+
+    @POST("logout")
+    fun postLogout(@Header("Authorization") authHeader: String): Observable<ResponseBody>
+
 
 }
