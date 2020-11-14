@@ -4,7 +4,6 @@ import Utils.LogUtil
 import Utils.Variables
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
-import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 object HttpClient {

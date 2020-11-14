@@ -1,13 +1,13 @@
 package IO
 
 import IO.response.LoginResponse
+import Models.Appointment
 import Models.Doctor
 import Models.Schedule
 import Models.Specialty
 import Utils.Variables
 import io.reactivex.Observable
 import okhttp3.ResponseBody
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -46,5 +46,6 @@ interface ApiService {
     @POST("logout")
     fun postLogout(@Header("Authorization") authHeader: String): Observable<ResponseBody>
 
-
+    @GET("appointments")
+    fun getAppointments(@Header("Authorization") authHeader: String): Observable<ArrayList<Appointment>>
 }

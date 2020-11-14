@@ -30,6 +30,7 @@
     <string name="item_appointment_id">Cita medica #%1$d</string>
     <string name="item_appointment_date">Atencion el dia %1$s</string>
     <string name="item_appointment_time">A las %1$s</string>
+    <string name="item_appointment_created_at">Esta cita se registro el dia %1$s con la siguiente Descripcion:</string>
     <string name="my_appointments">Mis citas Medicas</string>
     <string name="validate_appointment_description">La descripcion es demasiado corta</string>
     <string name="validate_appointment_date">Es necesario seleccionar una fecha</string>
