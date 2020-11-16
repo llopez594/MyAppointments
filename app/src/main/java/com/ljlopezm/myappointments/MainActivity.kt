@@ -1,7 +1,6 @@
 package com.ljlopezm.myappointments
 
 import Extensions.toast
-import io.ApiService
 import Utils.LogUtil
 import Utils.sharedPreferences
 import Utils.sharedPreferences.get
@@ -10,12 +9,11 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager.LayoutParams.FLAG_SECURE
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.iid.FirebaseInstanceId
+import io.ApiService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
@@ -31,11 +29,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         this.window.setFlags(FLAG_SECURE, FLAG_SECURE)
         setContentView(R.layout.activity_main)
-
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) { instanceIdResult ->
-            val deviceToken = instanceIdResult.token
-            Log.d("FCMService", deviceToken)
-        }
 
         // shared preferences
         preferences = sharedPreferences.defaultPrefs(this)
@@ -78,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                     if (loginResponse.success) {
                         this.createSessionPreferences(loginResponse.jwt)
                         toast(getString(R.string.welcome_name, loginResponse.user.name))
-                        this.goToMenuActivity()
+                        this.goToMenuActivity(isUserInput = true)
                     } else {
                         toast(getString(R.string.error_invalid_credentials))
                     }
@@ -93,8 +86,13 @@ class MainActivity : AppCompatActivity() {
         preferences["jwt"] = jwt
     }
 
-    private fun goToMenuActivity() {
+    private fun goToMenuActivity(isUserInput: Boolean = false) {
         val intent = Intent(this, MenuActivity::class.java)
+
+        if (isUserInput) {
+            intent.putExtra("store_token", true)
+        }
+
         startActivity(intent)
         finish()
     }

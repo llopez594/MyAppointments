@@ -11,10 +11,10 @@ object LogUtil {
         Log.d(tag, debugMessage)
     }
 
-    fun errorLog(tag: String, debugMessage: String?) {
-        when (debugMessage) {
+    fun errorLog(tag: String, errorMessage: String?) {
+        when (errorMessage) {
             null -> Log.e(tag, "")
-            else -> Log.e(tag, debugMessage)
+            else -> Log.e(tag, errorMessage)
         }
     }
 }

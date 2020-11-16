@@ -3,7 +3,6 @@ package com.ljlopezm.myappointments
 import Extensions.toast
 import Utils.LogUtil
 import Utils.sharedPreferences
-import Utils.sharedPreferences.get
 import Utils.sharedPreferences.set
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -52,7 +51,7 @@ class RegisterActivity : AppCompatActivity() {
             return
         }
 
-        apiService.postRegisteer(
+        apiService.postRegister(
             name = name,
             email = email,
             password =  password,

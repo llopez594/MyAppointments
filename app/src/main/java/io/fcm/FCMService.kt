@@ -1,5 +1,9 @@
 package io.fcm
 
+import Utils.LogUtil
+import Utils.sharedPreferences
+import Utils.sharedPreferences.get
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -13,8 +17,14 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.ljlopezm.myappointments.MainActivity
 import com.ljlopezm.myappointments.R
+import io.ApiService
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class FCMService : FirebaseMessagingService() {
+
+    private val apiService: ApiService by lazy { ApiService.create() }
+    private val preferences by lazy { sharedPreferences.defaultPrefs(this) }
 
     /**
      * Called when message is received.
@@ -57,13 +67,28 @@ class FCMService : FirebaseMessagingService() {
      * the previous token had been compromised. Note that this is called when the
      * FCM registration token is initially generated so this is where you would retrieve the token.
      */
-    override fun onNewToken(token: String) {
-        Log.d(TAG, "Refreshed token: $token")
+    @SuppressLint("CheckResult")
+    override fun onNewToken(newToken: String) {
+        Log.d(TAG, "Refreshed token: $newToken")
+
+        val jwt = preferences["jwt", ""]
+        if (jwt.isNotEmpty()) {
+            apiService.postToken(
+                authHeader = "Bearer $jwt",
+                fcmToken =  newToken
+            ).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    LogUtil.debugLog(TAG,"NUEVO TOKEN REGISTRADO CORRECTAMENTE")
+                }, {
+                    LogUtil.debugLog(TAG, "HUBO UN PROBLEMA AL REGISTRAR EL TOKEN. $it")
+                })
+        }
 
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // FCM registration token to your app server.
-        sendRegistrationToServer(token)
+        sendRegistrationToServer(newToken)
     }
     // [END on_new_token]
 

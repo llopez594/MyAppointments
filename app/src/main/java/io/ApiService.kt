@@ -61,11 +61,14 @@ interface ApiService {
                          @Query("type") type: String
     ): Observable<SimpleResponse>
 
-    //    @Headers("Accept: application/json")
     @POST("register")
-    fun postRegisteer(@Query("name") name: String,
-                      @Query("email") email: String,
-                      @Query("password") password: String,
-                      @Query("password_confirmation") passwordConfirmation: String
+    fun postRegister(@Query("name") name: String,
+                     @Query("email") email: String,
+                     @Query("password") password: String,
+                     @Query("password_confirmation") passwordConfirmation: String
     ): Observable<LoginResponse>
+
+    @POST("fcm/token")
+    fun postToken(@Header("Authorization") authHeader: String,
+                  @Query("device_token") fcmToken: String): Observable<ResponseBody>
 }
