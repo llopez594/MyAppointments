@@ -10,9 +10,6 @@ import android.content.pm.PackageInfo
 object Variables {
 
     private var url:String? = "192.168.0.3/my-appointments/public"
-    var id:String? = ""
-    var lanid:String? = ""
-    var token: String? = ""
     var time_connect_out: Long = 10
     var time_write_out: Long = 10
     var time_read_out: Long = 10

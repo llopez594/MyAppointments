@@ -1,7 +1,6 @@
 package com.ljlopezm.myappointments
 
-import Extensions.toast
-import IO.ApiService
+import io.ApiService
 import Utils.LogUtil
 import Utils.sharedPreferences
 import Utils.sharedPreferences.get
@@ -10,6 +9,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.annotation.SuppressLint
+import android.view.WindowManager.LayoutParams.FLAG_SECURE
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_menu.*
@@ -21,6 +21,7 @@ class MenuActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        this.window.setFlags(FLAG_SECURE, FLAG_SECURE)
         setContentView(R.layout.activity_menu)
 
         btnCreateAppointment.setOnClickListener {

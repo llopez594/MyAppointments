@@ -2,11 +2,13 @@ package com.ljlopezm.myappointments
 
 import Extensions.toEditable
 import Extensions.toast
-import IO.ApiService
+import io.ApiService
 import Models.Doctor
-import Models.Schedule
 import Models.Specialty
+import Utils.KeyboardUtil
 import Utils.LogUtil
+import Utils.sharedPreferences
+import Utils.sharedPreferences.get
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
@@ -14,6 +16,8 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.WindowManager
+import android.view.WindowManager.LayoutParams.FLAG_SECURE
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
@@ -32,12 +36,14 @@ import kotlin.collections.ArrayList
 class CreateAppointmentActivity : AppCompatActivity() {
 
     private val apiService: ApiService by lazy { ApiService.create() }
+    private val preferences by lazy { sharedPreferences.defaultPrefs(this) }
 
     private val selectedCalendar = Calendar.getInstance()
     private var selectedTimeRadioButton: RadioButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        this.window.setFlags(FLAG_SECURE, FLAG_SECURE)
         setContentView(R.layout.activity_create_appointment)
 
         btnNext.setOnClickListener {
@@ -69,11 +75,10 @@ class CreateAppointmentActivity : AppCompatActivity() {
         }
 
         btnConfirmAppointment.setOnClickListener {
-            toast("Cita registrada correctamente")
-            finish()
+            this.performStoreAppointment()
         }
 
-        etDescription.text = "asd".toEditable()
+//        etDescription.text = "asd".toEditable()
         this.loadSpecialties()
         this.listenSpecialtyChanges()
         this.listenDoctorAndDateChanges()
@@ -161,7 +166,34 @@ class CreateAppointmentActivity : AppCompatActivity() {
                 displayIntervalRadios(hours)
             }, {
                 LogUtil.errorLog("Valores", "Error en el subscribe!!. $it")
-                Toast.makeText(this@CreateAppointmentActivity, getString(R.string.error_loading_hours), Toast.LENGTH_SHORT).show()
+                toast(getString(R.string.error_loading_hours))
+            })
+    }
+
+    @SuppressLint("CheckResult")
+    private fun performStoreAppointment() {
+        btnConfirmAppointment.isClickable = false
+        val jwt = preferences["jwt", ""]
+        val specialty = spinnerSpecialties.selectedItem as Specialty
+        val doctor = spinnerDoctors.selectedItem as Doctor
+        apiService.storeAppointment(
+            authHeader = "Bearer $jwt",
+            description = tvConfirmDescription.text.toString(),
+            specialtyId = specialty.id,
+            doctorId = doctor.id,
+            scheduledDate = tvConfirmDate.text.toString(),
+            scheduledTime = tvConfirmTime.text.toString(),
+            type = tvConfirmType.text.toString() )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                LogUtil.debugLog("Valores", "post submitted to API. $it")
+                toast(getString(R.string.create_appointment_success))
+                finish()
+            }, {
+                LogUtil.errorLog("Valores", "Error en el subscribe!!. $it")
+                toast(getString(R.string.create_appointment_error))
+                btnConfirmAppointment.isClickable = true
             })
     }
 

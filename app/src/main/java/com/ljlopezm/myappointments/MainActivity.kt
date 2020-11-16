@@ -1,7 +1,7 @@
 package com.ljlopezm.myappointments
 
 import Extensions.toast
-import IO.ApiService
+import io.ApiService
 import Utils.LogUtil
 import Utils.sharedPreferences
 import Utils.sharedPreferences.get
@@ -10,6 +10,8 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.WindowManager
+import android.view.WindowManager.LayoutParams.FLAG_SECURE
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
@@ -26,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        this.window.setFlags(FLAG_SECURE, FLAG_SECURE)
         setContentView(R.layout.activity_main)
         // shared preferences
         preferences = sharedPreferences.defaultPrefs(this)

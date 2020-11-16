@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.AutoTransition
+import androidx.transition.TransitionManager
 import com.ljlopezm.myappointments.R
 import kotlinx.android.synthetic.main.item_appointment.view.*
 
@@ -30,6 +32,8 @@ class AppointmentsAdapter: RecyclerView.Adapter<AppointmentsAdapter.Appointments
             }
 
             ibExpand.setOnClickListener {
+                TransitionManager.beginDelayedTransition(parent as ViewGroup, AutoTransition())
+
                 when(linearLayoutDetails.visibility) {
                     View.VISIBLE -> {
                         linearLayoutDetails.visibility = View.GONE

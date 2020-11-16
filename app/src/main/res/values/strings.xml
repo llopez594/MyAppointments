@@ -52,4 +52,10 @@
     <string name="error_invalid_credentials">Las credenciales son incorrectas</string>
     <string name="error_empty_credentials">Por favor ingrese correo y contraseña</string>
     <string name="welcome_name">Bienvenido %1$s</string>
+    <string name="create_appointment_success">Cita registrada correctamente</string>
+    <string name="create_appointment_error">Ocurrio un error inesperado registrando la cita medica.</string>
+    <string name="label_password_confirmation">Confirmar Clave</string>
+    <string name="error_register_empty_fields">Por favor completar todos los datos</string>
+    <string name="error_register_passwords_do_not_match">Las contraseñas no coinciden</string>
+    <string name="error_register_validarion">Ocurrio un error en el registro</string>
 </resources>

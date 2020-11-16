@@ -1,12 +1,13 @@
-package IO
+package io
 
-import IO.response.LoginResponse
+import io.response.LoginResponse
 import Models.Appointment
 import Models.Doctor
 import Models.Schedule
 import Models.Specialty
 import Utils.Variables
 import io.reactivex.Observable
+import io.response.SimpleResponse
 import okhttp3.ResponseBody
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -48,4 +49,23 @@ interface ApiService {
 
     @GET("appointments")
     fun getAppointments(@Header("Authorization") authHeader: String): Observable<ArrayList<Appointment>>
+
+    //    @Headers("Accept: application/json")
+    @POST("appointments")
+    fun storeAppointment(@Header("Authorization") authHeader: String,
+                         @Query("description") description: String,
+                         @Query("specialty_id") specialtyId: Int,
+                         @Query("doctor_id") doctorId: Int,
+                         @Query("schedule_date") scheduledDate: String,
+                         @Query("scheduled_time") scheduledTime: String,
+                         @Query("type") type: String
+    ): Observable<SimpleResponse>
+
+    //    @Headers("Accept: application/json")
+    @POST("register")
+    fun postRegisteer(@Query("name") name: String,
+                      @Query("email") email: String,
+                      @Query("password") password: String,
+                      @Query("password_confirmation") passwordConfirmation: String
+    ): Observable<LoginResponse>
 }

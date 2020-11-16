@@ -2,7 +2,7 @@ package com.ljlopezm.myappointments
 
 import Adapters.AppointmentsAdapter
 import Extensions.toast
-import IO.ApiService
+import io.ApiService
 import Utils.LogUtil
 import Utils.sharedPreferences
 import Utils.sharedPreferences.get
