@@ -10,11 +10,16 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.annotation.SuppressLint
+import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_SECURE
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.iid.FirebaseInstanceId
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_menu.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MenuActivity : AppCompatActivity() {
 
@@ -30,9 +35,12 @@ class MenuActivity : AppCompatActivity() {
         if (storeToken)
             this.storeToken()
 
+        btnProfile.setOnClickListener {
+            this.editProfile()
+        }
+
         btnCreateAppointment.setOnClickListener {
-            val intent = Intent(this, CreateAppointmentActivity::class.java)
-            startActivity(intent)
+            this.createAppointment(it)
         }
 
         btnMyAppointments.setOnClickListener {
@@ -43,6 +51,35 @@ class MenuActivity : AppCompatActivity() {
         btnLogout.setOnClickListener {
             this.performLogout()
         }
+    }
+
+    private fun editProfile() {
+        val intent = Intent(this, ProfileActivity::class.java)
+        startActivity(intent)
+    }
+
+    @SuppressLint("CheckResult")
+    private fun createAppointment(view: View) {
+        val jwt = preferences["jwt", ""]
+        apiService.getUser(authHeader = "Bearer $jwt")
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                LogUtil.debugLog(Companion.TAG,"TOKEN REGISTRADO CORRECTAMENTE")
+
+                val user = it
+                val phoneLength = user?.phone?.length ?: 0
+
+                if (phoneLength >= 6) {
+                    val intent = Intent(this@MenuActivity, CreateAppointmentActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    Snackbar.make(view, R.string.you_need_a_phone, Snackbar.LENGTH_LONG).show()
+                }
+            }, {
+                LogUtil.errorLog("Valores", "Error en el subscribe!!. $it")
+                toast(it.message.toString())
+            })
     }
 
     private fun storeToken() {

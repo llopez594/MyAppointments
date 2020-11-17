@@ -1,10 +1,7 @@
 package io
 
+import Models.*
 import io.response.LoginResponse
-import Models.Appointment
-import Models.Doctor
-import Models.Schedule
-import Models.Specialty
 import Utils.Variables
 import io.reactivex.Observable
 import io.response.SimpleResponse
@@ -29,6 +26,16 @@ interface ApiService {
             return retrofit.create(ApiService::class.java)
         }
     }
+
+    @GET("user")
+    fun getUser(@Header("Authorization") authHeader: String): Observable<User>
+
+    @POST("user")
+    fun postUser(@Header("Authorization") authHeader: String,
+                 @Query("name") name: String,
+                 @Query("phone") phone: String,
+                 @Query("address") address: String
+    ): Observable<ResponseBody>
 
     @GET("specialties")
     fun getSpecialties(): Observable<ArrayList<Specialty>>
